@@ -1,13 +1,22 @@
-// src/main.ts
-import { enableProdMode }               from '@angular/core';
-import { platformBrowserDynamic }       from '@angular/platform-browser-dynamic';
-import { AppModule }                    from './app/app.module';
-import { environment }                  from './environments/environment';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter }        from '@angular/router';
+import { importProvidersFrom }  from '@angular/core';
+import { HttpClientModule }     from '@angular/common/http';
 
-if (environment.production) {
-  enableProdMode();
-}
+import { AppComponent }         from './app/app.component';
+import { LoginComponent }       from './app/auth/login/login.component';
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+import { Routes } from '@angular/router';
+
+const routes: Routes = [
+  { path: 'login',  component: LoginComponent },
+  { path: '',       redirectTo: 'login', pathMatch: 'full' },
+  { path: '**',     redirectTo: 'login', pathMatch: 'full' }
+];
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(HttpClientModule),
+    provideRouter(routes)
+  ]
+}).catch(err => console.error(err));
